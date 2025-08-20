@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voda v Dim - Консультація по колонках на воду • Івано-Франківська область</title>
+    <meta name="description" content="Дізнайтеся точну вартість колонки на воду для вашої ділянки. Безкоштовна консультація майстра. Працюємо в приміщеннях, витягуємо старі труби.">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --text: #34495e;
+            --light: #ecf0f1;
+            --white: #ffffff;
+            --shadow: rgba(0,0,0,0.1);
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--white);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: var(--white);
+            padding: 20px 0;
+            box-shadow: 0 2px 10px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--secondary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,197.3C1248,203,1344,149,1392,122.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+        }
+        
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-text h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero-text p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+        
+        .features-list {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+        
+        .features-list li {
+            padding: 10px 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .features-list li::before {
+            content: '✓';
+            margin-right: 15px;
+            font-size: 24px;
+            color: #4ade80;
+        }
+        
+        /* Map Section */
+        .map-container {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .map-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .map-svg {
+            width: 100%;
+            height: auto;
+        }
+        
+        .district {
+            fill: #e8f4fd;
+            stroke: #3498db;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .district.active {
+            fill: #3498db;
+        }
+        
+        .district:hover {
+            fill: #74b9ff;
+        }
+        
+        .district-label {
+            font-size: 12px;
+            fill: var(--primary);
+            pointer-events: none;
+            text-anchor: middle;
+            font-weight: 500;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        /* Lead Form */
+        .lead-section {
+            padding: 80px 0;
+            background: var(--light);
+        }
+        
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+        
+        .form-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .form-subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e8eaed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Services */
+        .services {
+            padding: 80px 0;
+            background: var(--white);
+        }
+        
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 50px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px var(--shadow);
+            transition: transform 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .service-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .service-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .service-description {
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 40px 0;
+            text-align: center;
+        }
+        
+        .footer-brand {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .footer-text {
+            opacity: 0.8;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .hero-text h1 {
+                font-size: 36px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-svg {
+                height: 400px;
+            }
+        }
+        
+        /* Message styles */
+        .form-message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .form-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .form-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* Honeypot */
+        .hp { position: absolute; left: -9999px; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">Voda v <span>Dim</span></a>
+                <div class="header-info">Професійні рішення водопостачання</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>Потрібна колонка на воду?</h1>
+                    <p>Дізнайтеся точну вартість для вашої ділянки</p>
+                    <ul class="features-list">
+                        <li>Безкоштовна консультація майстра</li>
+                        <li>Працюємо навіть в приміщеннях</li>
+                        <li>Витягуємо старі труби</li>
+                        <li>Орієнтовна вартість: 9000-11000 грн</li>
+                    </ul>
+                    <a href="#form" class="submit-btn" style="display: inline-block; padding: 16px 40px; text-decoration: none;">
+                        Дізнатися точну вартість
+                    </a>
+                </div>
+                
+                <div class="map-container">
+                    <h3 class="map-title">Зона нашого покриття</h3>
+                    <svg class="map-svg" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Simplified map of Ivano-Frankivsk Oblast -->
+                        <!-- Central districts (where service is available) -->
+                        <g id="service-area">
+                            <!-- Івано-Франківськ -->
+                            <rect class="district active" x="220" y="180" width="60" height="40" rx="5"/>
+                            <text class="district-label" x="250" y="205">ІФ</text>
+                            
+                            <!-- Тисменицький -->
+                            <rect class="district active" x="280" y="180" width="50" height="40" rx="5"/>
+                            <text class="district-label" x="305" y="205">Тисм.</text>
+                            
+                            <!-- Калуський -->
+                            <rect class="district active" x="160" y="180" width="60" height="40" rx="5"/>
+                            <text class="district-label" x="190" y="205">Калуш</text>
+                            
+                            <!-- Коломийський -->
+                            <rect class="district active" x="330" y="180" width="60" height="40" rx="5"/>
+                            <text class="district-label" x="360" y="205">Колом.</text>
+                            
+                            <!-- Other districts (inactive) -->
+                            <!-- Богородчанський -->
+                            <rect class="district" x="160" y="140" width="60" height="40" rx="5"/>
+                            <text class="district-label" x="190" y="165">Богород.</text>
+                            
+                            <!-- Надвірнянський -->
+                            <rect class="district" x="220" y="140" width="60" height="40" rx="5"/>
+                            <text class="district-label" x="250" y="165">Надвір.</text>
+                            
+                            <!-- Долинський -->
+                            <rect class="district" x="100" y="180" width="60" height="40" rx="5"/>
+                            <text class="district-label" x="130" y="205">Долин.</text>
+                            
+                            <!-- Рожнятівський -->
+                            <rect class="district" x="100" y="140" width="60" height="40" rx="5"/>
+                            <text class="district-label" x="130" y="165">Рожн.</text>
+                            
+                            <!-- Косівський -->
+                            <rect class="district" x="280" y="220" width="50" height="40" rx="5"/>
+                            <text class="district-label" x="305" y="245">Косів</text>
+                            
+                            <!-- Верховинський -->
+                            <rect class="district" x="330" y="100" width="60" height="40" rx="5"/>
+                            <text class="district-label" x="360" y="125">Верхов.</text>
+                            
+                            <!-- Снятинський -->
+                            <rect class="district" x="330" y="220" width="60" height="40" rx="5"/>
+                            <text class="district-label" x="360" y="245">Снятин</text>
+                            
+                            <!-- Городенківський -->
+                            <rect class="district" x="280" y="260" width="60" height="40" rx="5"/>
+                            <text class="district-label" x="310" y="285">Город.</text>
+                            
+                            <!-- Галицький -->
+                            <rect class="district" x="220" y="220" width="60" height="40" rx="5"/>
+                            <text class="district-label" x="250" y="245">Галич</text>
+                        </g>
+                    </svg>
+                    
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #3498db;"></div>
+                            <span>Працюємо</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #e8f4fd;"></div>
+                            <span>Незабаром</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section class="services">
+        <div class="container">
+            <h2 class="section-title">Наші послуги</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">💧</div>
+                    <h3 class="service-title">Забивання колонок</h3>
+                    <p class="service-description">
+                        Професійне забивання абіссинських колонок глибиною до 15 метрів. 
+                        Швидко, якісно, з гарантією результату.
+                    </p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🏠</div>
+                    <h3 class="service-title">Робота в приміщеннях</h3>
+                    <p class="service-description">
+                        Унікальна можливість забивання колонки безпосередньо всередині 
+                        будинку або підвалу. Акуратно та без пошкоджень.
+                    </p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🔧</div>
+                    <h3 class="service-title">Демонтаж старих труб</h3>
+                    <p class="service-description">
+                        Витягуємо старі труби та замінюємо їх на нові. 
+                        Повне оновлення системи водопостачання.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section style="padding: 60px 0; background: white;">
+        <div class="container">
+            <h2 class="section-title">Часті питання</h2>
+            <div style="max-width: 800px; margin: 0 auto;">
+                <details style="margin-bottom: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                    <summary style="font-weight: 600; cursor: pointer; color: var(--primary);">
+                        Чи зобов'язує мене консультація до замовлення?
+                    </summary>
+                    <p style="margin-top: 15px; color: #7f8c8d;">
+                        Ні, абсолютно ні. Консультація безкоштовна і ні до чого не зобов'язує. 
+                        Майстер відповість на ваші питання, розрахує вартість для вашої ділянки 
+                        і ви спокійно приймете рішення.
+                    </p>
+                </details>
+                
+                <details style="margin-bottom: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                    <summary style="font-weight: 600; cursor: pointer; color: var(--primary);">
+                        Від чого залежить ціна?
+                    </summary>
+                    <p style="margin-top: 15px; color: #7f8c8d;">
+                        Вартість залежить від глибини залягання води, типу ґрунту, 
+                        необхідності демонтажу старих труб та додаткових робіт. 
+                        Орієнтовна вартість 9000-11000 грн, але точну суму майстер 
+                        назве після оцінки вашої ситуації.
+                    </p>
+                </details>
+                
+                <details style="margin-bottom: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                    <summary style="font-weight: 600; cursor: pointer; color: var(--primary);">
+                        Скільки часу займає робота?
+                    </summary>
+                    <p style="margin-top: 15px; color: #7f8c8d;">
+                        Зазвичай забивання колонки займає від 3 до 8 годин залежно 
+                        від умов. Робота в приміщенні може зайняти трохи більше часу 
+                        через обмежений простір.
+                    </p>
+                </details>
+                
+                <details style="margin-bottom: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                    <summary style="font-weight: 600; cursor: pointer; color: var(--primary);">
+                        Чи даєте гарантію на роботу?
+                    </summary>
+                    <p style="margin-top: 15px; color: #7f8c8d;">
+                        Так, майстер надає гарантію на виконані роботи. Термін та умови 
+                        гарантії обговорюються індивідуально при замовленні.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lead Form Section -->
+    <section id="form" class="lead-section">
+        <div class="container">
+            <!-- Process explanation -->
+            <div style="max-width: 800px; margin: 0 auto 40px; text-align: center;">
+                <h3 style="font-size: 24px; color: var(--primary); margin-bottom: 20px;">
+                    Як це працює?
+                </h3>
+                <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 30px;">
+                    <div style="flex: 1; min-width: 200px;">
+                        <div style="font-size: 36px; margin-bottom: 10px;">1️⃣</div>
+                        <p style="color: #7f8c8d;">Ви залишаєте заявку на консультацію</p>
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <div style="font-size: 36px; margin-bottom: 10px;">2️⃣</div>
+                        <p style="color: #7f8c8d;">Майстер телефонує і відповідає на питання</p>
+                    </div>
+                    <div style="flex: 1; min-width: 200px;">
+                        <div style="font-size: 36px; margin-bottom: 10px;">3️⃣</div>
+                        <p style="color: #7f8c8d;">Ви приймаєте рішення без тиску</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-container">
+                <h2 class="form-title">Дізнайтеся точну вартість</h2>
+                <p class="form-subtitle">Безкоштовна консультація майстра • Без зобов'язань</p>
+                
+                <form id="leadForm">
+                    <div class="form-group">
+                        <label for="phone">Ваш телефон *</label>
+                        <input type="tel" id="phone" name="phone" required 
+                               placeholder="+380..." pattern="[+]380[0-9]{9}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="district">Район *</label>
+                        <select id="district" name="district" required>
+                            <option value="">Оберіть район</option>
+                            <optgroup label="Працюємо зараз">
+                                <option value="Івано-Франківськ">м. Івано-Франківськ</option>
+                                <option value="Калуський">Калуський район</option>
+                                <option value="Коломийський">Коломийський район</option>
+                                <option value="Тисменицький">Тисменицький район</option>
+                            </optgroup>
+                            <optgroup label="Інші райони">
+                                <option value="Богородчанський">Богородчанський район</option>
+                                <option value="Верховинський">Верховинський район</option>
+                                <option value="Галицький">Галицький район</option>
+                                <option value="Городенківський">Городенківський район</option>
+                                <option value="Долинський">Долинський район</option>
+                                <option value="Косівський">Косівський район</option>
+                                <option value="Надвірнянський">Надвірнянський район</option>
+                                <option value="Рожнятівський">Рожнятівський район</option>
+                                <option value="Снятинський">Снятинський район</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="locality">Населений пункт</label>
+                        <input type="text" id="locality" name="locality" 
+                               placeholder="Назва села або міста">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Що вас цікавить? (необов'язково)</label>
+                        <textarea id="message" name="message" rows="3" 
+                                  placeholder="Наприклад: колонка в приміщенні, заміна старих труб, термін виконання..."></textarea>
+                    </div>
+                    
+                    <!-- Honeypot -->
+                    <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+                    
+                    <button type="submit" class="submit-btn">
+                        Отримати консультацію
+                    </button>
+                    
+                    <p style="text-align: center; margin-top: 15px; color: #7f8c8d; font-size: 14px;">
+                        ✓ Безкоштовно • ✓ Без нав'язування • ✓ Відповідь протягом години
+                    </p>
+                    
+                    <div id="formMessage" class="form-message"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-brand">Voda v Dim</div>
+            <p class="footer-text">© 2025 Професійні рішення водопостачання</p>
+            <p class="footer-text">Івано-Франківська область</p>
+        </div>
+    </footer>
+
+    <script>
+        // Service areas
+        const serviceAreas = ['Івано-Франківськ', 'Калуський', 'Коломийський', 'Тисменицький'];
+        
+        // Form handling
+        const form = document.getElementById('leadForm');
+        const message = document.getElementById('formMessage');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            
+            // Honeypot check
+            if (formData.get('website') && formData.get('website').trim() !== '') {
+                return;
+            }
+            
+            const district = formData.get('district');
+            const isServiceArea = serviceAreas.includes(district);
+            
+            const payload = {
+                phone: formData.get('phone').trim(),
+                district: district,
+                locality: formData.get('locality').trim(),
+                message: formData.get('message').trim(),
+                service_area: isServiceArea,
+                timestamp: new Date().toISOString(),
+                page: window.location.href
+            };
+            
+            try {
+                // Send to backend
+                const response = await fetch('/.netlify/functions/lead-router', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (response.ok) {
+                    showMessage('✅ Дякуємо! Майстер зв\'яжеться з вами протягом години для безкоштовної консультації.', 'success');
+                    form.reset();
+                } else {
+                    throw new Error('Network error');
+                }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                showMessage('Виникла помилка. Будь ласка, спробуйте пізніше.', 'error');
+            }
+        });
+        
+        function showMessage(text, type) {
+            message.textContent = text;
+            message.className = `form-message ${type}`;
+            message.style.display = 'block';
+            
+            setTimeout(() => {
+                message.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // District selection from map
+        document.querySelectorAll('.district').forEach(rect => {
+            rect.addEventListener('click', function() {
+                const labels = {
+                    'ІФ': 'Івано-Франківськ',
+                    'Тисм.': 'Тисменицький',
+                    'Калуш': 'Калуський',
+                    'Колом.': 'Коломийський',
+                    'Богород.': 'Богородчанський',
+                    'Надвір.': 'Надвірнянський',
+                    'Долин.': 'Долинський',
+                    'Рожн.': 'Рожнятівський',
+                    'Косів': 'Косівський',
+                    'Верхов.': 'Верховинський',
+                    'Снятин': 'Снятинський',
+                    'Город.': 'Городенківський',
+                    'Галич': 'Галицький'
+                };
+                
+                const labelText = this.nextElementSibling.textContent;
+                const districtName = labels[labelText];
+                
+                if (districtName) {
+                    document.getElementById('district').value = districtName;
+                    document.getElementById('form').scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
