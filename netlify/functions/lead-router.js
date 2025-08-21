@@ -1,81 +1,68 @@
-
 exports.handler = async (event) => {
-    const corsHeaders = {
+    console.log('Function called:', event.httpMethod);
+    
+    // CORS
+    const headers = {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type'
     };
 
+    // Handle OPTIONS
     if (event.httpMethod === 'OPTIONS') {
-        return { statusCode: 200, headers: corsHeaders, body: 'OK' };
+        return { statusCode: 200, headers, body: '' };
     }
 
+    // Only POST
     if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, headers: corsHeaders, body: 'Method Not Allowed' };
+        return { 
+            statusCode: 405, 
+            headers,
+            body: JSON.stringify({ error: 'Method not allowed' })
+        };
     }
 
     try {
-        const body = JSON.parse(event.body || '{}');
-        const { phone, district, locality, message } = body;
+        // Parse body
+        const data = JSON.parse(event.body);
+        console.log('Received data:', data);
 
-        if (!phone || !district) {
-            return {
-                statusCode: 400,
-                headers: corsHeaders,
-                body: JSON.stringify({ error: 'Phone and district required' })
-            };
-        }
-
-        const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+        // Get env vars
+        const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
         const CHAT_ID = process.env.TELEGRAM_ADMIN_CHAT_ID;
-
-        if (!BOT_TOKEN || !CHAT_ID) {
-            console.error('Missing Telegram credentials');
-            return {
-                statusCode: 500,
-                headers: corsHeaders,
-                body: JSON.stringify({ error: 'Server configuration error' })
-            };
-        }
-
-        const text = `💧 НОВА ЗАЯВКА
-
-📞 Телефон: ${phone}
-📍 Район: ${district}
-🏘️ Населений пункт: ${locality || '-'}
-💬 Повідомлення: ${message || '-'}
-🕒 Час: ${new Date().toLocaleString('uk-UA')}`;
-
-        const response = await fetch(
-            `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: text
-                })
-            }
-        );
-
-        const data = await response.json();
         
-        if (!response.ok) {
-            console.error('Telegram error:', data);
-            throw new Error('Telegram error');
-        }
+        console.log('Token exists:', !!TOKEN);
+        console.log('Chat ID:', CHAT_ID);
+
+        // Simple message
+        const message = `Нова заявка:\nТел: ${data.phone}\nРайон: ${data.district}`;
+
+        // Send to Telegram
+        const url = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: message
+            })
+        });
+
+        console.log('Telegram response status:', response.status);
+        const result = await response.text();
+        console.log('Telegram response:', result);
 
         return {
             statusCode: 200,
-            headers: corsHeaders,
-            body: JSON.stringify({ ok: true, message: 'Заявка відправлена' })
+            headers,
+            body: JSON.stringify({ success: true })
         };
+
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error.message);
         return {
             statusCode: 500,
-            headers: corsHeaders,
-            body: JSON.stringify({ error: 'Server error', details: error.message })
+            headers,
+            body: JSON.stringify({ error: error.message })
         };
     }
 };
