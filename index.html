@@ -784,7 +784,14 @@
                     <div class="form-group">
                         <label for="phone">Ваш телефон *</label>
                         <input type="tel" id="phone" name="phone" required 
-                               placeholder="+380..." pattern="[+]380[0-9]{9}">
+                               placeholder="099 123 45 67" 
+                               inputmode="tel"
+                               pattern="[0-9+() -]{9,20}"
+                               title="Введіть номер телефону"
+                               autocomplete="tel">
+                        <small style="color: #95a5a6; font-size: 12px; margin-top: 4px; display: block;">
+                            Можна вводити в будь-якому форматі
+                        </small>
                     </div>
                     
                     <div class="form-group">
@@ -856,6 +863,55 @@
         // Form handling
         const form = document.getElementById('leadForm');
         const message = document.getElementById('formMessage');
+        const phoneInput = document.getElementById('phone');
+        
+        // Auto-format phone number as user types
+        phoneInput.addEventListener('input', function(e) {
+            let value = e.target.value;
+            
+            // Keep only digits and possibly + at the start
+            let hasPlus = value.startsWith('+');
+            value = value.replace(/\D/g, '');
+            
+            // Format for display
+            if (value.length > 0) {
+                let formatted = value;
+                
+                // Handle different starting patterns
+                if (value.startsWith('380')) {
+                    // Full format: 380991234567 -> 099 123 45 67
+                    formatted = '0' + value.slice(3);
+                } else if (value.startsWith('38')) {
+                    // Partial: 38099... -> 099...
+                    formatted = '0' + value.slice(2);
+                } else if (value.startsWith('80')) {
+                    // Missing 3: 80991234567 -> 099...
+                    formatted = '0' + value.slice(2);
+                } else if (value.startsWith('0')) {
+                    // Already starts with 0, keep as is
+                    formatted = value;
+                } else {
+                    // Just digits like 991234567, add 0
+                    formatted = '0' + value;
+                }
+                
+                // Limit to 10 digits after formatting
+                if (formatted.length > 10) {
+                    formatted = formatted.slice(0, 10);
+                }
+                
+                // Add spaces for readability: 099 123 45 67
+                let spaced = '';
+                for (let i = 0; i < formatted.length; i++) {
+                    if (i === 3 || i === 6 || i === 8) {
+                        spaced += ' ';
+                    }
+                    spaced += formatted[i];
+                }
+                
+                e.target.value = spaced.trim();
+            }
+        });
         
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -867,11 +923,43 @@
                 return;
             }
             
+            // Clean and format phone number for sending
+            let phone = formData.get('phone').trim();
+            // Remove all non-digits
+            phone = phone.replace(/\D/g, '');
+            
+            // Handle different input formats
+            if (phone.length === 9) {
+                // Just 9 digits like 991234567
+                phone = '380' + phone;
+            } else if (phone.length === 10 && phone.startsWith('0')) {
+                // Format 0991234567
+                phone = '38' + phone;
+            } else if (phone.length === 11 && phone.startsWith('80')) {
+                // Format 80991234567 (missing 3)
+                phone = '3' + phone;
+            } else if (phone.length === 12 && phone.startsWith('380')) {
+                // Format 380991234567 - already correct
+                // Do nothing
+            } else if (!phone.startsWith('380') && phone.length >= 10) {
+                // Any other format - try to make it work
+                if (phone.startsWith('0')) {
+                    phone = '38' + phone;
+                } else {
+                    phone = '380' + phone;
+                }
+            }
+            
+            // Ensure it starts with +
+            if (!phone.startsWith('+')) {
+                phone = '+' + phone;
+            }
+            
             const district = formData.get('district');
             const isServiceArea = serviceAreas.includes(district);
             
             const payload = {
-                phone: formData.get('phone').trim(),
+                phone: phone,
                 district: district,
                 locality: formData.get('locality').trim(),
                 message: formData.get('message').trim(),
