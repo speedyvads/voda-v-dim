@@ -329,23 +329,210 @@
             opacity: 0.8;
         }
         
-        /* Responsive */
+        /* Mobile-specific improvements */
         @media (max-width: 768px) {
+            .hero {
+                padding: 40px 0;
+                text-align: left;
+            }
+            
             .hero-content {
                 grid-template-columns: 1fr;
-                gap: 40px;
+                gap: 30px;
             }
             
             .hero-text h1 {
-                font-size: 36px;
+                font-size: 28px;
+                line-height: 1.3;
+                margin-bottom: 15px;
+            }
+            
+            .hero-text p {
+                font-size: 16px;
+                margin-bottom: 20px;
+            }
+            
+            .features-list {
+                margin-bottom: 25px;
+            }
+            
+            .features-list li {
+                font-size: 15px;
+                padding: 8px 0;
+            }
+            
+            .features-list li::before {
+                font-size: 20px;
+                margin-right: 10px;
+            }
+            
+            .map-container {
+                padding: 20px 15px;
+                margin: 0 -10px;
+            }
+            
+            .map-title {
+                font-size: 16px;
+                margin-bottom: 15px;
+            }
+            
+            .map-svg {
+                width: 100%;
+                height: auto;
+                min-height: 280px;
+                max-width: 400px;
+                margin: 0 auto;
+                display: block;
+            }
+            
+            .district {
+                stroke-width: 1.5;
+            }
+            
+            .district-label {
+                font-size: 11px;
+                font-weight: 600;
+            }
+            
+            .legend {
+                flex-direction: row;
+                justify-content: center;
+                gap: 20px;
+                margin-top: 15px;
+            }
+            
+            .legend-item {
+                font-size: 13px;
+            }
+            
+            .legend-color {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .services {
+                padding: 40px 0;
             }
             
             .services-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .service-card {
+                padding: 25px 20px;
+            }
+            
+            .service-icon {
+                font-size: 40px;
+                margin-bottom: 15px;
+            }
+            
+            .service-title {
+                font-size: 20px;
+                margin-bottom: 12px;
+            }
+            
+            .service-description {
+                font-size: 14px;
+                line-height: 1.5;
+            }
+            
+            .section-title {
+                font-size: 26px;
+                margin-bottom: 30px;
+            }
+            
+            .lead-section {
+                padding: 40px 0;
+            }
+            
+            .form-container {
+                padding: 25px 20px;
+                margin: 0 10px;
+                border-radius: 15px;
+            }
+            
+            .form-title {
+                font-size: 22px;
+                margin-bottom: 8px;
+            }
+            
+            .form-subtitle {
+                font-size: 14px;
+                margin-bottom: 20px;
+            }
+            
+            .form-group {
+                margin-bottom: 18px;
+            }
+            
+            .form-group label {
+                font-size: 14px;
+                margin-bottom: 6px;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 12px;
+                font-size: 16px; /* Prevents zoom on iOS */
+                border-radius: 8px;
+            }
+            
+            .submit-btn {
+                padding: 14px;
+                font-size: 16px;
+                border-radius: 8px;
+            }
+            
+            footer {
+                padding: 30px 0;
+                font-size: 14px;
+            }
+            
+            .footer-brand {
+                font-size: 20px;
+            }
+            
+            /* Fix for FAQ on mobile */
+            details {
+                margin-bottom: 15px;
+                padding: 15px;
+            }
+            
+            details summary {
+                font-size: 15px;
+            }
+            
+            details p {
+                font-size: 14px;
+                margin-top: 12px;
+            }
+            
+            /* Process steps on mobile */
+            div[style*="display: flex"] {
+                flex-direction: column !important;
+                text-align: center;
+            }
+            
+            div[style*="flex: 1"] {
+                margin-bottom: 20px;
+            }
+        }
+        
+        /* Extra small devices */
+        @media (max-width: 400px) {
+            .hero-text h1 {
+                font-size: 24px;
             }
             
             .map-svg {
-                height: 400px;
+                min-height: 250px;
+            }
+            
+            .district-label {
+                font-size: 9px;
             }
         }
         
@@ -397,69 +584,69 @@
                         <li>Витягуємо старі труби</li>
                         <li>Орієнтовна вартість: 9000-11000 грн</li>
                     </ul>
-                    <a href="#form" class="submit-btn" style="display: inline-block; padding: 16px 40px; text-decoration: none;">
-                        Дізнатися точну вартість
+                    <a href="#form" class="submit-btn" style="display: inline-block; padding: 16px 40px; text-decoration: none; white-space: nowrap;">
+                        Дізнатися вартість
                     </a>
                 </div>
                 
                 <div class="map-container">
                     <h3 class="map-title">Зона нашого покриття</h3>
-                    <svg class="map-svg" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="map-svg" viewBox="0 0 400 350" xmlns="http://www.w3.org/2000/svg">
                         <!-- Simplified map of Ivano-Frankivsk Oblast -->
                         <!-- Central districts (where service is available) -->
                         <g id="service-area">
                             <!-- Івано-Франківськ -->
-                            <rect class="district active" x="220" y="180" width="60" height="40" rx="5"/>
-                            <text class="district-label" x="250" y="205">ІФ</text>
+                            <rect class="district active" x="170" y="150" width="60" height="45" rx="5"/>
+                            <text class="district-label" x="200" y="178">ІФ</text>
                             
                             <!-- Тисменицький -->
-                            <rect class="district active" x="280" y="180" width="50" height="40" rx="5"/>
-                            <text class="district-label" x="305" y="205">Тисм.</text>
+                            <rect class="district active" x="230" y="150" width="55" height="45" rx="5"/>
+                            <text class="district-label" x="257" y="178">Тисм.</text>
                             
                             <!-- Калуський -->
-                            <rect class="district active" x="160" y="180" width="60" height="40" rx="5"/>
-                            <text class="district-label" x="190" y="205">Калуш</text>
+                            <rect class="district active" x="110" y="150" width="60" height="45" rx="5"/>
+                            <text class="district-label" x="140" y="178">Калуш</text>
                             
                             <!-- Коломийський -->
-                            <rect class="district active" x="330" y="180" width="60" height="40" rx="5"/>
-                            <text class="district-label" x="360" y="205">Колом.</text>
+                            <rect class="district active" x="285" y="150" width="60" height="45" rx="5"/>
+                            <text class="district-label" x="315" y="178">Колом.</text>
                             
                             <!-- Other districts (inactive) -->
                             <!-- Богородчанський -->
-                            <rect class="district" x="160" y="140" width="60" height="40" rx="5"/>
-                            <text class="district-label" x="190" y="165">Богород.</text>
+                            <rect class="district" x="110" y="105" width="60" height="45" rx="5"/>
+                            <text class="district-label" x="140" y="133">Богород.</text>
                             
                             <!-- Надвірнянський -->
-                            <rect class="district" x="220" y="140" width="60" height="40" rx="5"/>
-                            <text class="district-label" x="250" y="165">Надвір.</text>
+                            <rect class="district" x="170" y="105" width="60" height="45" rx="5"/>
+                            <text class="district-label" x="200" y="133">Надвір.</text>
                             
                             <!-- Долинський -->
-                            <rect class="district" x="100" y="180" width="60" height="40" rx="5"/>
-                            <text class="district-label" x="130" y="205">Долин.</text>
+                            <rect class="district" x="50" y="150" width="60" height="45" rx="5"/>
+                            <text class="district-label" x="80" y="178">Долин.</text>
                             
                             <!-- Рожнятівський -->
-                            <rect class="district" x="100" y="140" width="60" height="40" rx="5"/>
-                            <text class="district-label" x="130" y="165">Рожн.</text>
+                            <rect class="district" x="50" y="105" width="60" height="45" rx="5"/>
+                            <text class="district-label" x="80" y="133">Рожн.</text>
                             
                             <!-- Косівський -->
-                            <rect class="district" x="280" y="220" width="50" height="40" rx="5"/>
-                            <text class="district-label" x="305" y="245">Косів</text>
+                            <rect class="district" x="230" y="195" width="55" height="45" rx="5"/>
+                            <text class="district-label" x="257" y="223">Косів</text>
                             
                             <!-- Верховинський -->
-                            <rect class="district" x="330" y="100" width="60" height="40" rx="5"/>
-                            <text class="district-label" x="360" y="125">Верхов.</text>
+                            <rect class="district" x="285" y="60" width="60" height="45" rx="5"/>
+                            <text class="district-label" x="315" y="88">Верхов.</text>
                             
                             <!-- Снятинський -->
-                            <rect class="district" x="330" y="220" width="60" height="40" rx="5"/>
-                            <text class="district-label" x="360" y="245">Снятин</text>
+                            <rect class="district" x="285" y="195" width="60" height="45" rx="5"/>
+                            <text class="district-label" x="315" y="223">Снятин</text>
                             
                             <!-- Городенківський -->
-                            <rect class="district" x="280" y="260" width="60" height="40" rx="5"/>
-                            <text class="district-label" x="310" y="285">Город.</text>
+                            <rect class="district" x="230" y="240" width="60" height="45" rx="5"/>
+                            <text class="district-label" x="260" y="268">Город.</text>
                             
                             <!-- Галицький -->
-                            <rect class="district" x="220" y="220" width="60" height="40" rx="5"/>
-                            <text class="district-label" x="250" y="245">Галич</text>
+                            <rect class="district" x="170" y="195" width="60" height="45" rx="5"/>
+                            <text class="district-label" x="200" y="223">Галич</text>
                         </g>
                     </svg>
                     
