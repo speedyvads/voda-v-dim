@@ -556,6 +556,43 @@
             border: 1px solid #f5c6cb;
         }
         
+        /* Geo pill */
+        .geo-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.35);
+            color: var(--white);
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 15px;
+            margin-bottom: 18px;
+            max-width: 100%;
+        }
+        .geo-change {
+            background: var(--white);
+            color: var(--primary);
+            border: none;
+            border-radius: 999px;
+            padding: 4px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .geo-picker { margin-bottom: 18px; max-width: 360px; }
+        .geo-picker label { display: block; color: var(--white); font-size: 14px; margin-bottom: 6px; opacity: .9; }
+        .geo-picker select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.5);
+            font-size: 16px;
+            color: var(--primary);
+            background: var(--white);
+        }
+
         /* Honeypot */
         .hp { position: absolute; left: -9999px; }
     </style>
@@ -576,8 +613,16 @@
         <div class="container">
             <div class="hero-content">
                 <div class="hero-text">
-                    <h1>Потрібна колонка на воду?</h1>
-                    <p>Дізнайтеся точну вартість для вашої ділянки</p>
+                    <div class="geo-pill" id="geoPill">
+                        <span id="geoPillText">📍 Визначаємо ваш населений пункт…</span>
+                        <button type="button" id="geoChange" class="geo-change">Змінити</button>
+                    </div>
+                    <div class="geo-picker" id="geoPicker" hidden>
+                        <label for="placeSelect">Ваш населений пункт</label>
+                        <select id="placeSelect"></select>
+                    </div>
+                    <h1 id="heroTitle">Потрібна колонка на воду?</h1>
+                    <p id="heroSub">Дізнайтеся точну вартість для вашої ділянки</p>
                     <ul class="features-list">
                         <li>Безкоштовна консультація майстра</li>
                         <li>Працюємо навіть в приміщеннях</li>
@@ -611,41 +656,41 @@
                             <rect class="district active" x="285" y="150" width="60" height="45" rx="5"/>
                             <text class="district-label" x="315" y="178">Колом.</text>
                             
-                            <!-- Other districts (inactive) -->
+                            <!-- Other districts -->
                             <!-- Богородчанський -->
-                            <rect class="district" x="110" y="105" width="60" height="45" rx="5"/>
+                            <rect class="district active" x="110" y="105" width="60" height="45" rx="5"/>
                             <text class="district-label" x="140" y="133">Богород.</text>
                             
                             <!-- Надвірнянський -->
-                            <rect class="district" x="170" y="105" width="60" height="45" rx="5"/>
+                            <rect class="district active" x="170" y="105" width="60" height="45" rx="5"/>
                             <text class="district-label" x="200" y="133">Надвір.</text>
                             
                             <!-- Долинський -->
-                            <rect class="district" x="50" y="150" width="60" height="45" rx="5"/>
+                            <rect class="district active" x="50" y="150" width="60" height="45" rx="5"/>
                             <text class="district-label" x="80" y="178">Долин.</text>
                             
                             <!-- Рожнятівський -->
-                            <rect class="district" x="50" y="105" width="60" height="45" rx="5"/>
+                            <rect class="district active" x="50" y="105" width="60" height="45" rx="5"/>
                             <text class="district-label" x="80" y="133">Рожн.</text>
                             
                             <!-- Косівський -->
-                            <rect class="district" x="230" y="195" width="55" height="45" rx="5"/>
+                            <rect class="district active" x="230" y="195" width="55" height="45" rx="5"/>
                             <text class="district-label" x="257" y="223">Косів</text>
                             
                             <!-- Верховинський -->
-                            <rect class="district" x="285" y="60" width="60" height="45" rx="5"/>
+                            <rect class="district active" x="285" y="60" width="60" height="45" rx="5"/>
                             <text class="district-label" x="315" y="88">Верхов.</text>
                             
                             <!-- Снятинський -->
-                            <rect class="district" x="285" y="195" width="60" height="45" rx="5"/>
+                            <rect class="district active" x="285" y="195" width="60" height="45" rx="5"/>
                             <text class="district-label" x="315" y="223">Снятин</text>
                             
                             <!-- Городенківський -->
-                            <rect class="district" x="230" y="240" width="60" height="45" rx="5"/>
+                            <rect class="district active" x="230" y="240" width="60" height="45" rx="5"/>
                             <text class="district-label" x="260" y="268">Город.</text>
                             
                             <!-- Галицький -->
-                            <rect class="district" x="170" y="195" width="60" height="45" rx="5"/>
+                            <rect class="district active" x="170" y="195" width="60" height="45" rx="5"/>
                             <text class="district-label" x="200" y="223">Галич</text>
                         </g>
                     </svg>
@@ -654,10 +699,6 @@
                         <div class="legend-item">
                             <div class="legend-color" style="background: #3498db;"></div>
                             <span>Працюємо</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #e8f4fd;"></div>
-                            <span>Незабаром</span>
                         </div>
                     </div>
                 </div>
@@ -798,23 +839,21 @@
                         <label for="district">Район *</label>
                         <select id="district" name="district" required>
                             <option value="">Оберіть район</option>
-                            <optgroup label="Працюємо зараз">
-                                <option value="Івано-Франківськ">м. Івано-Франківськ</option>
-                                <option value="Калуський">Калуський район</option>
-                                <option value="Коломийський">Коломийський район</option>
-                                <option value="Тисменицький">Тисменицький район</option>
-                            </optgroup>
-                            <optgroup label="Інші райони">
-                                <option value="Богородчанський">Богородчанський район</option>
-                                <option value="Верховинський">Верховинський район</option>
-                                <option value="Галицький">Галицький район</option>
-                                <option value="Городенківський">Городенківський район</option>
-                                <option value="Долинський">Долинський район</option>
-                                <option value="Косівський">Косівський район</option>
-                                <option value="Надвірнянський">Надвірнянський район</option>
-                                <option value="Рожнятівський">Рожнятівський район</option>
-                                <option value="Снятинський">Снятинський район</option>
-                            </optgroup>
+                            <option value="Івано-Франківськ">м. Івано-Франківськ</option>
+                            <option value="Богородчанський">Богородчанський район</option>
+                            <option value="Верховинський">Верховинський район</option>
+                            <option value="Галицький">Галицький район</option>
+                            <option value="Городенківський">Городенківський район</option>
+                            <option value="Долинський">Долинський район</option>
+                            <option value="Калуський">Калуський район</option>
+                            <option value="Коломийський">Коломийський район</option>
+                            <option value="Косівський">Косівський район</option>
+                            <option value="Надвірнянський">Надвірнянський район</option>
+                            <option value="Рогатинський">Рогатинський район</option>
+                            <option value="Рожнятівський">Рожнятівський район</option>
+                            <option value="Снятинський">Снятинський район</option>
+                            <option value="Тисменицький">Тисменицький район</option>
+                            <option value="Тлумацький">Тлумацький район</option>
                         </select>
                     </div>
                     
@@ -832,6 +871,9 @@
                     
                     <!-- Honeypot -->
                     <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+                    <input type="hidden" name="place" id="placeField">
+                    <input type="hidden" name="geo_city" id="geoCityField">
+                    <input type="hidden" name="geo_source" id="geoSourceField">
                     
                     <button type="submit" class="submit-btn">
                         Отримати консультацію
@@ -858,12 +900,170 @@
 
     <script>
         // Service areas
-        const serviceAreas = ['Івано-Франківськ', 'Калуський', 'Коломийський', 'Тисменицький'];
+        // працюємо по всій області
         
         // Form handling
         const form = document.getElementById('leadForm');
         const message = document.getElementById('formMessage');
         const phoneInput = document.getElementById('phone');
+
+        // ===== Гео: визначення населеного пункту =====
+        // [назва, "у/в + місцевий відмінок", район, префікси англ. написання (MaxMind)]
+        const PLACES = [
+            ['Івано-Франківськ', 'в Івано-Франківську', 'Івано-Франківськ', ['ivano', 'stanisl']],
+            ['Угринів', 'в Угринові', 'Івано-Франківськ', ['uhryn', 'ugryn', 'ugrin']],
+            ['Крихівці', 'у Крихівцях', 'Івано-Франківськ', ['krykhiv']],
+            ['Микитинці', 'у Микитинцях', 'Івано-Франківськ', ['mykytyn']],
+            ['Хриплин', 'у Хриплині', 'Івано-Франківськ', ['khryplyn']],
+            ['Вовчинець', 'у Вовчинці', 'Івано-Франківськ', ['vovchyn']],
+            ['Чернієв', 'у Чернієві', 'Івано-Франківськ', ['cherniy', 'cherniiv', 'chernij']],
+            ['Тисмениця', 'у Тисмениці', 'Тисменицький', ['tysmen', 'tismen']],
+            ['Ямниця', 'в Ямниці', 'Тисменицький', ['yamnyts', 'yamnits', 'jamnyc']],
+            ['Лисець', 'у Лисці', 'Тисменицький', ['lysets', 'lisets']],
+            ['Єзупіль', 'у Єзуполі', 'Тисменицький', ['yezup', 'ezup', 'jezup']],
+            ['Загвіздя', 'у Загвізді', 'Тисменицький', ['zahvizd', 'zagvizd']],
+            ['Калуш', 'у Калуші', 'Калуський', ['kalush']],
+            ['Войнилів', 'у Войнилові', 'Калуський', ['voynyl', 'voinyl', 'vojnyl']],
+            ['Коломия', 'у Коломиї', 'Коломийський', ['kolom']],
+            ['Печеніжин', 'у Печеніжині', 'Коломийський', ['pechenizh']],
+            ['Отинія', 'в Отинії', 'Коломийський', ['otyn', 'otin']],
+            ['Гвіздець', 'у Гвіздці', 'Коломийський', ['hvizd', 'gvozd', 'gvizd']],
+            ['Надвірна', 'у Надвірній', 'Надвірнянський', ['nadvir', 'nadwor']],
+            ['Делятин', 'у Делятині', 'Надвірнянський', ['delyat', 'deliat', 'deljat']],
+            ['Ланчин', 'у Ланчині', 'Надвірнянський', ['lanchyn', 'lanchin']],
+            ['Яремче', 'в Яремчі', 'Надвірнянський', ['yarem', 'jarem']],
+            ['Ворохта', 'у Ворохті', 'Надвірнянський', ['vorokht']],
+            ['Яблуниця', 'в Яблуниці', 'Надвірнянський', ['yablunyts', 'yablunits', 'jablunyc']],
+            ['Битків', 'у Биткові', 'Надвірнянський', ['bytkiv', 'bitkov']],
+            ['Пасічна', 'у Пасічній', 'Надвірнянський', ['pasichn']],
+            ['Косів', 'у Косові', 'Косівський', ['kosiv', 'kosov']],
+            ['Кути', 'у Кутах', 'Косівський', ['kuty']],
+            ['Яблунів', 'в Яблунові', 'Косівський', ['yablun', 'jablun']],
+            ['Верховина', 'у Верховині', 'Верховинський', ['verkhov', 'verhov']],
+            ['Криворівня', 'у Криворівні', 'Верховинський', ['kryvoriv', 'krivoriv']],
+            ['Снятин', 'у Снятині', 'Снятинський', ['snyat', 'sniat', 'snjat']],
+            ['Заболотів', 'у Заболотові', 'Снятинський', ['zabolot']],
+            ['Городенка', 'у Городенці', 'Городенківський', ['horoden', 'goroden']],
+            ['Чернелиця', 'у Чернелиці', 'Городенківський', ['chernelyts', 'chernelits']],
+            ['Тлумач', 'у Тлумачі', 'Тлумацький', ['tlumach', 'tlumacz']],
+            ['Обертин', 'в Обертині', 'Тлумацький', ['obertyn', 'obertin']],
+            ['Галич', 'у Галичі', 'Галицький', ['halych', 'galich', 'galych']],
+            ['Бурштин', 'у Бурштині', 'Галицький', ['bursht']],
+            ['Більшівці', 'у Більшівцях', 'Галицький', ['bilshiv', 'bolshov']],
+            ['Рогатин', 'у Рогатині', 'Рогатинський', ['rohat', 'rogat']],
+            ['Долина', 'у Долині', 'Долинський', ['dolyn', 'dolin']],
+            ['Болехів', 'у Болехові', 'Долинський', ['bolekh', 'boleh']],
+            ['Вигода', 'у Вигоді', 'Долинський', ['vyhod', 'vygod', 'vigod']],
+            ['Рожнятів', 'у Рожнятові', 'Рожнятівський', ['rozhn', 'rozn']],
+            ['Брошнів-Осада', 'у Брошнів-Осаді', 'Рожнятівський', ['broshn', 'brosn']],
+            ['Перегінське', 'у Перегінському', 'Рожнятівський', ['perehin', 'peregin']],
+            ['Богородчани', 'у Богородчанах', 'Богородчанський', ['bohorod', 'bogorod']],
+            ['Солотвин', 'у Солотвині', 'Богородчанський', ['solotv']],
+        ];
+        const OBLAST_ONLY = { name: 'Івано-Франківська область', loc: 'на Івано-Франківщині', district: '' };
+        const DEFAULT_TITLE = 'Потрібна колонка на воду?';
+        const DEFAULT_SUB = 'Дізнайтеся точну вартість для вашої ділянки';
+
+        const heroTitle = document.getElementById('heroTitle');
+        const heroSub = document.getElementById('heroSub');
+        const geoPillText = document.getElementById('geoPillText');
+        const geoChange = document.getElementById('geoChange');
+        const geoPicker = document.getElementById('geoPicker');
+        const placeSelect = document.getElementById('placeSelect');
+        const districtSelect = document.getElementById('district');
+        const localityInput = document.getElementById('locality');
+        const placeField = document.getElementById('placeField');
+        const geoCityField = document.getElementById('geoCityField');
+        const geoSourceField = document.getElementById('geoSourceField');
+
+        // заповнюємо список для ручного вибору
+        (function buildPicker() {
+            const opts = ['<option value="">— оберіть —</option>'];
+            PLACES.slice().sort((a, b) => a[0].localeCompare(b[0], 'uk')).forEach(p => {
+                opts.push(`<option value="${p[0]}">${p[0]}</option>`);
+            });
+            opts.push(`<option value="__oblast">Інший населений пункт області</option>`);
+            opts.push(`<option value="__none">Не в Івано-Франківській області</option>`);
+            placeSelect.innerHTML = opts.join('');
+        })();
+
+        const norm = s => String(s || '').toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z]/g, '');
+
+        function matchCity(city) {
+            const n = norm(city);
+            if (!n) return null;
+            // довші префікси першими (Яблуниця vs Яблунів)
+            const sorted = PLACES.slice().sort((a, b) => Math.max(...b[3].map(x => x.length)) - Math.max(...a[3].map(x => x.length)));
+            return sorted.find(p => p[3].some(pre => n.startsWith(pre))) || null;
+        }
+
+        function inOblast(g) {
+            if (!g || g.country !== 'UA') return false;
+            const code = String(g.subdivision || '');
+            const name = norm(g.subdivisionName);
+            return code === '26' || code === 'UA-26' || name.startsWith('ivano');
+        }
+
+        let lastPlace = null, lastSource = '';
+        function applyPlace(p, source) {
+            lastPlace = p; lastSource = source;
+            // p: [name, loc, district] | OBLAST_ONLY | null
+            if (!p) {
+                heroTitle.textContent = DEFAULT_TITLE;
+                heroSub.textContent = DEFAULT_SUB;
+                geoPillText.textContent = '📍 Оберіть ваш населений пункт';
+                placeField.value = '';
+                geoSourceField.value = source || '';
+                return;
+            }
+            const isOblast = p === OBLAST_ONLY;
+            const name = isOblast ? p.name : p[0];
+            const loc = isOblast ? p.loc : p[1];
+            const district = isOblast ? '' : p[2];
+            const locCap = loc.charAt(0).toUpperCase() + loc.slice(1);
+
+            heroTitle.textContent = `${locCap} є майстер, який заб'є колонку на воду`;
+            heroSub.textContent = 'Помпа в приміщенні або назовні. Дізнайтеся точну вартість для вашої ділянки';
+            geoPillText.textContent = `📍 ${name}`;
+            placeField.value = name;
+            geoSourceField.value = source;
+
+            if (district) districtSelect.value = district;
+            if (!isOblast && !localityInput.value) localityInput.value = name;
+            if (!isOblast) placeSelect.value = name;
+        }
+
+        geoChange.addEventListener('click', () => {
+            geoPicker.hidden = !geoPicker.hidden;
+            if (!geoPicker.hidden) placeSelect.focus();
+        });
+
+        placeSelect.addEventListener('change', () => {
+            const v = placeSelect.value;
+            if (!v) return;
+            localityInput.value = '';
+            if (v === '__oblast') applyPlace(OBLAST_ONLY, 'manual');
+            else if (v === '__none') applyPlace(null, 'manual');
+            else applyPlace(PLACES.find(p => p[0] === v) || null, 'manual');
+            geoPicker.hidden = true;
+        });
+
+        (async function detectGeo() {
+            try {
+                const r = await fetch('/.netlify/functions/geo', { cache: 'no-store' });
+                const g = await r.json();
+                geoCityField.value = g.city || '';
+                const city = matchCity(g.city);
+                if (city) applyPlace(city, 'auto');
+                else if (inOblast(g)) applyPlace(OBLAST_ONLY, 'auto');
+                else applyPlace(null, 'auto');
+            } catch (e) {
+                applyPlace(null, '');
+            }
+        })();
+
         
         // Auto-format phone number as user types
         phoneInput.addEventListener('input', function(e) {
@@ -956,7 +1156,7 @@
             }
             
             const district = formData.get('district');
-            const isServiceArea = serviceAreas.includes(district);
+            const isServiceArea = true;
             
             const payload = {
                 phone: phone,
@@ -964,13 +1164,16 @@
                 locality: formData.get('locality').trim(),
                 message: formData.get('message').trim(),
                 service_area: isServiceArea,
+                place: formData.get('place') || '',
+                geo_city: formData.get('geo_city') || '',
+                geo_source: formData.get('geo_source') || '',
                 timestamp: new Date().toISOString(),
                 page: window.location.href
             };
             
             try {
                 // Send to backend
-                const response = await fetch('/.netlify/functions/lead-router', {
+                const response = await fetch('/.netlify/functions/lead', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -981,6 +1184,7 @@
                 if (response.ok) {
                     showMessage('✅ Дякуємо! Майстер зв\'яжеться з вами протягом години для безкоштовної консультації.', 'success');
                     form.reset();
+                    applyPlace(lastPlace, lastSource);
                 } else {
                     throw new Error('Network error');
                 }
